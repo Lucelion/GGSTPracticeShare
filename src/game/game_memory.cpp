@@ -8,6 +8,8 @@ uintptr_t GameMemory::s_GWorldRVA = Offsets::GWorld;
 uintptr_t GameMemory::s_GGameCommonRVA = Offsets::GGameCommon;
 uintptr_t GameMemory::s_GSaveDataManagerRVA = Offsets::GSaveDataManager;
 bool GameMemory::s_IsInitialized = false;
+static bool s_SignaturesScanned = false;
+static int s_ScanAttempts = 0;
 
 static uintptr_t FindBytes(const uint8_t* base, size_t size, const uint8_t* pattern, const char* mask) {
     size_t patLen = std::strlen(mask);
@@ -32,37 +34,49 @@ bool GameMemory::Initialize() {
     }
     if (!s_ImageBase) return false;
 
-    // .text 복호화 이후 AOB 시그니처 스캔으로 RVA 동적 검증 (실패 시 정확한 기본 RVA 사용)
-    __try {
-        const uint8_t* textBase = reinterpret_cast<const uint8_t*>(s_ImageBase + 0x1000);
-        constexpr size_t textSize = 0x3668000;
-        if (textBase[0] == 0xB8) {
-            // 1. GWorld: 0F 2E C1 74 51 48 8B 1D ?? ?? ?? ?? 48 85 DB 74
-            const uint8_t patGW[] = { 0x0F, 0x2E, 0xC1, 0x74, 0x51, 0x48, 0x8B, 0x1D, 0, 0, 0, 0, 0x48, 0x85, 0xDB, 0x74 };
-            uintptr_t offGW = FindBytes(textBase, textSize, patGW, "xxxxxxxx????xxxx");
-            if (offGW) {
-                int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offGW + 8);
-                s_GWorldRVA = 0x1000 + offGW + 5 + 7 + disp;
-            }
+    // .text 전체 복호화 완료 후 AOB 시그니처 스캔으로 RVA 동적 검증 (실패 시 실측 기본 RVA 사용)
+    if (!s_SignaturesScanned && s_ScanAttempts < 5) {
+        __try {
+            const uint8_t* textBase = reinterpret_cast<const uint8_t*>(s_ImageBase + 0x1000);
+            constexpr size_t textSize = 0x3668000;
+            if (textBase[0] == 0xB8) {
+                s_ScanAttempts++;
+                bool foundGW = false, foundSD = false, foundGC = false;
 
-            // 2. GSaveDataManager: 48 63 43 04 48 69 C8 28 15 00 00 48 8B 05 ?? ?? ?? ?? 48 05 D4 84 02 00
-            const uint8_t patSD[] = { 0x48, 0x63, 0x43, 0x04, 0x48, 0x69, 0xC8, 0x28, 0x15, 0x00, 0x00, 0x48, 0x8B, 0x05, 0, 0, 0, 0, 0x48, 0x05, 0xD4, 0x84, 0x02, 0x00 };
-            uintptr_t offSD = FindBytes(textBase, textSize, patSD, "xxxxxxxxxxxxxx????xxxxxx");
-            if (offSD) {
-                int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offSD + 14);
-                s_GSaveDataManagerRVA = 0x1000 + offSD + 11 + 7 + disp;
-            }
+                // 1. GWorld: 0F 2E C1 74 51 48 8B 1D ?? ?? ?? ?? 48 85 DB 74
+                const uint8_t patGW[] = { 0x0F, 0x2E, 0xC1, 0x74, 0x51, 0x48, 0x8B, 0x1D, 0, 0, 0, 0, 0x48, 0x85, 0xDB, 0x74 };
+                uintptr_t offGW = FindBytes(textBase, textSize, patGW, "xxxxxxxx????xxxx");
+                if (offGW) {
+                    int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offGW + 8);
+                    s_GWorldRVA = 0x1000 + offGW + 5 + 7 + disp;
+                    foundGW = true;
+                }
 
-            // 3. GGameCommon: 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 F8 17 0F 85
-            const uint8_t patGC[] = { 0x48, 0x8B, 0x0D, 0, 0, 0, 0, 0xE8, 0, 0, 0, 0, 0x83, 0xF8, 0x17, 0x0F, 0x85 };
-            uintptr_t offGC = FindBytes(textBase, textSize, patGC, "xxx????x????xxxxx");
-            if (offGC) {
-                int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offGC + 3);
-                s_GGameCommonRVA = 0x1000 + offGC + 7 + disp;
+                // 2. GSaveDataManager: 48 63 43 04 48 69 C8 28 15 00 00 48 8B 05 ?? ?? ?? ?? 48 05 D4 84 02 00
+                const uint8_t patSD[] = { 0x48, 0x63, 0x43, 0x04, 0x48, 0x69, 0xC8, 0x28, 0x15, 0x00, 0x00, 0x48, 0x8B, 0x05, 0, 0, 0, 0, 0x48, 0x05, 0xD4, 0x84, 0x02, 00 };
+                uintptr_t offSD = FindBytes(textBase, textSize, patSD, "xxxxxxxxxxxxxx????xxxxxx");
+                if (offSD) {
+                    int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offSD + 14);
+                    s_GSaveDataManagerRVA = 0x1000 + offSD + 11 + 7 + disp;
+                    foundSD = true;
+                }
+
+                // 3. GGameCommon: 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 F8 17 0F 85
+                const uint8_t patGC[] = { 0x48, 0x8B, 0x0D, 0, 0, 0, 0, 0xE8, 0, 0, 0, 0, 0x83, 0xF8, 0x17, 0x0F, 0x85 };
+                uintptr_t offGC = FindBytes(textBase, textSize, patGC, "xxx????x????xxxxx");
+                if (offGC) {
+                    int32_t disp = *reinterpret_cast<const int32_t*>(textBase + offGC + 3);
+                    s_GGameCommonRVA = 0x1000 + offGC + 7 + disp;
+                    foundGC = true;
+                }
+
+                if (foundGW && foundSD && foundGC) {
+                    s_SignaturesScanned = true;
+                }
             }
         }
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER) {
+        __except (EXCEPTION_EXECUTE_HANDLER) {
+        }
     }
 
     s_IsInitialized = true;
@@ -80,8 +94,10 @@ bool GameMemory::WaitForDecryption(DWORD timeoutMs) {
     while (GetTickCount() - start < timeoutMs) {
         __try {
             // SteamStub 3.1 복호화 확인: .text RVA 0x1000이 복호화되면 첫 바이트가 0xB8
+            // 단, 57MB .text 영역 전체가 끝까지 복호화될 때까지 200ms 추가 대기
             uint8_t b = *(uint8_t*)(s_ImageBase + 0x1000);
             if (b == 0xB8) {
+                Sleep(250);
                 return true;
             }
         }
@@ -94,7 +110,7 @@ bool GameMemory::WaitForDecryption(DWORD timeoutMs) {
 }
 
 bool GameMemory::IsReady() {
-    if (!s_IsInitialized) {
+    if (!s_IsInitialized || (!s_SignaturesScanned && s_ScanAttempts < 5)) {
         Initialize();
     }
     return s_IsInitialized;

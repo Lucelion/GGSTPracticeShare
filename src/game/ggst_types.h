@@ -20,12 +20,12 @@ struct GGSTRecordingSlot {
 #pragma pack(pop)
 static_assert(sizeof(GGSTRecordingSlot) == 0x1528, "GGSTRecordingSlot size must be 0x1528 bytes");
 
-// 핵심 RVA 오프셋 정의 (GGST-Win64-Shipping.exe 2026-07-02 빌드 기준)
+// 핵심 RVA 오프셋 정의 (GGST-Win64-Shipping.exe 최신 빌드 실측 기준)
 namespace Offsets {
-    constexpr uintptr_t GWorld            = 0x529B2F0;
-    constexpr uintptr_t GGameCommon       = 0x50083F0;
-    constexpr uintptr_t GSaveDataManager  = 0x4FE7810;
-    constexpr uintptr_t GTrainingManager  = 0x4AD32F0;
+    constexpr uintptr_t GWorld            = 0x529B2E0;
+    constexpr uintptr_t GGameCommon       = 0x50083E0;
+    constexpr uintptr_t GSaveDataManager  = 0x4FE7800;
+    constexpr uintptr_t GTrainingManager  = 0x4AD32E0;
 
     // 슬롯 메모리 오프셋
     constexpr uintptr_t SlotBaseOffset    = 0x284D4;
