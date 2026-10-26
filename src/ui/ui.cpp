@@ -591,12 +591,12 @@ void UI::RenderHeader() {
 
     // 프랙티스 모드 상태 배지
     if (isPractice) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.4f, 1.0f), "[● 프랙티스 활성]");
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.4f, 1.0f), "[프랙티스 활성]");
     } else {
-        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.3f, 1.0f), "[▲ 프랙티스 아님 (안전 잠금)]");
+        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.3f, 1.0f), "[프랙티스 아님 (안전 잠금)]");
     }
 
-    ImGui::TextColored(ImVec4(0.65f, 0.85f, 1.0f, 1.0f), "✦ 제미나이4 아르곤(Gemini 4 Argon)을 활용해 만든 모드입니다.");
+    ImGui::TextColored(ImVec4(0.65f, 0.85f, 1.0f, 1.0f), "제미나이4 아르곤(Gemini 4 Argon)을 활용해 만든 모드입니다.");
     ImGui::SameLine();
     if (isPractice) {
         ImGui::TextDisabled("| 창 모서리와 표 구분선을 마우스로 드래그해 크기를 조절할 수 있습니다.");
@@ -624,7 +624,7 @@ void UI::RenderHeader() {
     ImGui::Separator();
 
     // 퀵 액션 버튼 바 (단일 코드 GGSTREC1: 과 세트 코드 GGSTSET1: 모두 자동 인식!)
-    if (ImGui::Button("📋 클립보드에서 코드 붙여넣기 (개별/세트)", ImVec2(260, 32))) {
+    if (ImGui::Button("클립보드에서 코드 붙여넣기 (개별/세트)", ImVec2(250, 32))) {
         std::string clipText = RecordingManager::GetClipboardText();
         std::string err;
         if (RecordingManager::IsSetShareString(clipText)) {
@@ -645,9 +645,9 @@ void UI::RenderHeader() {
 
     ImGui::SameLine();
     std::string libBtnText = (s_ShowLibrary && s_ActiveTab == 0)
-        ? ("📂 개별 보관함 열림 (" + std::to_string(s_Library.size()) + ")")
-        : ("📁 개별 보관함 탭 (" + std::to_string(s_Library.size()) + ")");
-    if (ImGui::Button(libBtnText.c_str(), ImVec2(165, 32))) {
+        ? ("개별 보관함 열림 (" + std::to_string(s_Library.size()) + ")")
+        : ("개별 보관함 탭 (" + std::to_string(s_Library.size()) + ")");
+    if (ImGui::Button(libBtnText.c_str(), ImVec2(155, 32))) {
         if (s_ShowLibrary && s_ActiveTab == 0) {
             s_ShowLibrary = false;
         } else {
@@ -659,9 +659,9 @@ void UI::RenderHeader() {
 
     ImGui::SameLine();
     std::string setBtnText = (s_ShowLibrary && s_ActiveTab == 1)
-        ? ("📦 세트 보관함 열림 (" + std::to_string(s_SetLibrary.size()) + ")")
-        : ("📦 세트 보관함 탭 (" + std::to_string(s_SetLibrary.size()) + ")");
-    if (ImGui::Button(setBtnText.c_str(), ImVec2(165, 32))) {
+        ? ("세트 보관함 열림 (" + std::to_string(s_SetLibrary.size()) + ")")
+        : ("세트 보관함 탭 (" + std::to_string(s_SetLibrary.size()) + ")");
+    if (ImGui::Button(setBtnText.c_str(), ImVec2(155, 32))) {
         if (s_ShowLibrary && s_ActiveTab == 1) {
             s_ShowLibrary = false;
         } else {
@@ -676,14 +676,14 @@ void UI::RenderHeader() {
     if (s_KoreanMode) {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.18f, 0.50f, 0.32f, 0.90f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.24f, 0.62f, 0.40f, 1.00f));
-        if (ImGui::Button("⌨ 입력: [한글] (한/영키)", ImVec2(175, 32))) {
+        if (ImGui::Button("입력: [한글] (한/영키)", ImVec2(165, 32))) {
             ToggleKoreanMode();
         }
         ImGui::PopStyleColor(2);
     } else {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.25f, 0.35f, 0.58f, 0.90f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.32f, 0.45f, 0.72f, 1.00f));
-        if (ImGui::Button("⌨ 입력: [영문] (한/영키)", ImVec2(175, 32))) {
+        if (ImGui::Button("입력: [영문] (한/영키)", ImVec2(165, 32))) {
             ToggleKoreanMode();
         }
         ImGui::PopStyleColor(2);
@@ -692,7 +692,7 @@ void UI::RenderHeader() {
     // 토스트 알림 렌더링
     if (s_ToastTimer > 0.0f) {
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1.0f, 0.9f, 0.3f, 1.0f), "📢 %s", s_ToastMessage.c_str());
+        ImGui::TextColored(ImVec4(1.0f, 0.9f, 0.3f, 1.0f), "[알림] %s", s_ToastMessage.c_str());
         s_ToastTimer -= ImGui::GetIO().DeltaTime;
     }
 
@@ -703,10 +703,10 @@ void UI::RenderSlots() {
     bool isPractice = GameMemory::IsPracticeMode();
 
     ImGui::AlignTextToFramePadding();
-    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "▶ 인게임 트레이닝 내장 녹화 슬롯 (Slot 1 ~ 5)");
+    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "인게임 트레이닝 내장 녹화 슬롯 (Slot 1 ~ 5)");
 
     // 우측 상단에 [현재 슬롯 1~5 통째로 세트 만들기] 및 [새 세트 구성하기] 버튼 배치
-    float headerBtnX = ImGui::GetWindowWidth() - 430.0f;
+    float headerBtnX = ImGui::GetWindowWidth() - 410.0f;
     if (headerBtnX > 330.0f) {
         ImGui::SameLine(headerBtnX);
     } else {
@@ -715,14 +715,14 @@ void UI::RenderSlots() {
 
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.55f, 0.28f, 0.68f, 0.90f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.68f, 0.36f, 0.82f, 1.00f));
-    if (ImGui::Button("📦 현재 슬롯 1~5 묶어서 세트 만들기", ImVec2(240, 26))) {
+    if (ImGui::Button("현재 슬롯 1~5 묶어서 세트 만들기", ImVec2(230, 26))) {
         OpenSetModalFromCurrentGameSlots();
     }
     ImGui::PopStyleColor(2);
 
     ImGui::SameLine();
     ImGui::BeginDisabled(!isPractice);
-    if (ImGui::Button("🗑 전체 슬롯 비우기", ImVec2(165, 26))) {
+    if (ImGui::Button("전체 슬롯 비우기", ImVec2(155, 26))) {
         for (int s = 0; s < Offsets::MaxSlots; ++s) {
             GameMemory::ClearSlot(s);
         }
@@ -767,7 +767,7 @@ void UI::RenderSlots() {
         }
 
         // 우측 액션 버튼들
-        float rightOffset = ImGui::GetWindowWidth() - 275.0f;
+        float rightOffset = ImGui::GetWindowWidth() - 260.0f;
         if (rightOffset > 320.0f) {
             ImGui::SameLine(rightOffset);
         } else {
@@ -776,7 +776,7 @@ void UI::RenderSlots() {
 
         // 1. 저장 및 공유 코드 생성 버튼 (제목/캐릭터/메모 직접 작성 모달 오픈)
         ImGui::BeginDisabled(!hasData);
-        if (ImGui::Button("📤 저장 / 공유 코드 만들기", ImVec2(170, 26))) {
+        if (ImGui::Button("저장 / 공유 코드 만들기", ImVec2(160, 26))) {
             s_ExportSourceSlot = i;
             s_EditingLibraryIndex = -1;
             snprintf(s_ExportTitleBuf, sizeof(s_ExportTitleBuf), "");
@@ -789,7 +789,7 @@ void UI::RenderSlots() {
         // 2. 슬롯 비우기 버튼
         ImGui::SameLine();
         ImGui::BeginDisabled(!hasData);
-        if (ImGui::Button("🗑 비우기", ImVec2(80, 26))) {
+        if (ImGui::Button("비우기", ImVec2(75, 26))) {
             if (GameMemory::ClearSlot(i)) {
                 ShowToast("슬롯 " + std::to_string(i + 1) + " 메모리를 비웠습니다.");
             }
@@ -820,7 +820,7 @@ void UI::RenderConfirmModal() {
     ImGui::SetNextWindowSize(ImVec2(580, 440), ImGuiCond_FirstUseEver);
 
     if (ImGui::BeginPopupModal("녹화 데이터 인식 확인##ConfirmModal", NULL, ImGuiWindowFlags_NoMove)) {
-        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "🔍 클립보드에서 녹화 공유 코드를 인식했습니다! (이거 맞아?)");
+        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "클립보드에서 녹화 공유 코드를 인식했습니다! (이거 맞아?)");
         ImGui::TextDisabled("아래 정보를 확인(필요시 한글/영문 직접 수정 가능)한 뒤 원하는 슬롯에 적용하세요.");
         ImGui::Separator();
 
@@ -886,7 +886,7 @@ void UI::RenderConfirmModal() {
         bool isPractice = GameMemory::IsPracticeMode();
 
         ImGui::BeginDisabled(!isPractice);
-        if (ImGui::Button("✔ 맞음 (보관함 저장 + 슬롯 적용)", ImVec2(220, 34))) {
+        if (ImGui::Button("맞음 (보관함 저장 + 슬롯 적용)", ImVec2(215, 34))) {
             s_PendingConfirmItem.title = (std::strlen(s_ConfirmTitleEdit) > 0) ? s_ConfirmTitleEdit : "이름 없는 녹화";
             s_PendingConfirmItem.charName = (std::strlen(s_ConfirmCharEdit) > 0) ? s_ConfirmCharEdit : "미지정";
             s_PendingConfirmItem.note = s_ConfirmNoteEdit;
@@ -907,7 +907,7 @@ void UI::RenderConfirmModal() {
 
         ImGui::SameLine();
         ImGui::BeginDisabled(!isPractice);
-        if (ImGui::Button("▶ 슬롯에만 적용", ImVec2(145, 34))) {
+        if (ImGui::Button("슬롯에만 적용", ImVec2(140, 34))) {
             s_PendingConfirmItem.title = (std::strlen(s_ConfirmTitleEdit) > 0) ? s_ConfirmTitleEdit : "이름 없는 녹화";
             s_PendingConfirmItem.charName = (std::strlen(s_ConfirmCharEdit) > 0) ? s_ConfirmCharEdit : "미지정";
             s_PendingConfirmItem.note = s_ConfirmNoteEdit;
@@ -922,7 +922,7 @@ void UI::RenderConfirmModal() {
         ImGui::EndDisabled();
 
         ImGui::SameLine();
-        if (ImGui::Button("✖ 취소", ImVec2(140, 34))) {
+        if (ImGui::Button("취소", ImVec2(130, 34))) {
             ResetHangulState();
             ImGui::CloseCurrentPopup();
         }
@@ -948,9 +948,9 @@ void UI::RenderExportModal() {
 
     if (ImGui::BeginPopupModal("녹화 정보 입력 (저장 및 공유 코드 생성)##ExportModal", NULL, ImGuiWindowFlags_NoMove)) {
         if (s_EditingLibraryIndex >= 0 && s_EditingLibraryIndex < (int)s_Library.size()) {
-            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "✏ 보관함 녹화 정보 수정 (수정 시 공유 코드도 새 정보로 갱신됩니다)");
+            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "보관함 녹화 정보 수정 (수정 시 공유 코드도 새 정보로 갱신됩니다)");
         } else {
-            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "📤 슬롯 %d 녹화 정보 입력 (공유 코드에 아래 내용이 함께 담깁니다)", s_ExportSourceSlot + 1);
+            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "슬롯 %d 녹화 정보 입력 (공유 코드에 아래 내용이 함께 담깁니다)", s_ExportSourceSlot + 1);
         }
 
         // 모달 상단 한/영 전환 표시줄
@@ -1013,7 +1013,7 @@ void UI::RenderExportModal() {
 
         // 보관함 기존 항목 수정 모드인 경우
         if (s_EditingLibraryIndex >= 0 && s_EditingLibraryIndex < (int)s_Library.size()) {
-            if (ImGui::Button("💾 수정 저장 + 새 공유 코드 복사", ImVec2(245, 36))) {
+            if (ImGui::Button("수정 저장 + 새 공유 코드 복사", ImVec2(235, 36))) {
                 auto& item = s_Library[s_EditingLibraryIndex];
                 item.charName = (std::strlen(s_ExportCharBuf) > 0) ? s_ExportCharBuf : "미지정";
                 item.title = (std::strlen(s_ExportTitleBuf) > 0) ? s_ExportTitleBuf : "이름 없는 녹화";
@@ -1030,7 +1030,7 @@ void UI::RenderExportModal() {
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
-            if (ImGui::Button("💾 수정만 저장", ImVec2(150, 36))) {
+            if (ImGui::Button("수정만 저장", ImVec2(140, 36))) {
                 auto& item = s_Library[s_EditingLibraryIndex];
                 item.charName = (std::strlen(s_ExportCharBuf) > 0) ? s_ExportCharBuf : "미지정";
                 item.title = (std::strlen(s_ExportTitleBuf) > 0) ? s_ExportTitleBuf : "이름 없는 녹화";
@@ -1045,7 +1045,7 @@ void UI::RenderExportModal() {
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
-            if (ImGui::Button("✖ 취소", ImVec2(130, 36))) {
+            if (ImGui::Button("취소", ImVec2(120, 36))) {
                 ResetHangulState();
                 s_EditingLibraryIndex = -1;
                 ImGui::CloseCurrentPopup();
@@ -1058,7 +1058,7 @@ void UI::RenderExportModal() {
                 : ("슬롯 " + std::to_string(s_ExportSourceSlot + 1) + " 녹화");
             std::string finalNote = s_ExportNoteBuf;
 
-            if (ImGui::Button("📋 보관함 저장 + 코드 복사", ImVec2(210, 36))) {
+            if (ImGui::Button("보관함 저장 + 코드 복사", ImVec2(200, 36))) {
                 GGSTRecordingSlot slot{};
                 if (GameMemory::ReadSlot(s_ExportSourceSlot, slot)) {
                     RecordingItem item = RecordingManager::SlotToRecordingItem(
@@ -1077,7 +1077,7 @@ void UI::RenderExportModal() {
             }
 
             ImGui::SameLine();
-            if (ImGui::Button("📋 코드만 복사", ImVec2(125, 36))) {
+            if (ImGui::Button("코드만 복사", ImVec2(120, 36))) {
                 GGSTRecordingSlot slot{};
                 if (GameMemory::ReadSlot(s_ExportSourceSlot, slot)) {
                     RecordingItem item = RecordingManager::SlotToRecordingItem(
@@ -1092,7 +1092,7 @@ void UI::RenderExportModal() {
             }
 
             ImGui::SameLine();
-            if (ImGui::Button("💾 보관함만 저장", ImVec2(125, 36))) {
+            if (ImGui::Button("보관함만 저장", ImVec2(120, 36))) {
                 GGSTRecordingSlot slot{};
                 if (GameMemory::ReadSlot(s_ExportSourceSlot, slot)) {
                     RecordingItem item = RecordingManager::SlotToRecordingItem(
@@ -1107,7 +1107,7 @@ void UI::RenderExportModal() {
             }
 
             ImGui::SameLine();
-            if (ImGui::Button("✖ 취소", ImVec2(85, 36))) {
+            if (ImGui::Button("취소", ImVec2(80, 36))) {
                 ResetHangulState();
                 ImGui::CloseCurrentPopup();
             }
@@ -1136,7 +1136,7 @@ void UI::RenderConfirmSetModal() {
     ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
 
     if (ImGui::BeginPopupModal("녹화 세트 코드 인식 확인##ConfirmSetModal", NULL, ImGuiWindowFlags_NoMove)) {
-        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "📦 클립보드에서 [녹화 세트] 공유 코드를 인식했습니다! (이거 맞아?)");
+        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "클립보드에서 [녹화 세트] 공유 코드를 인식했습니다! (이거 맞아?)");
         ImGui::TextDisabled("적용 시 슬롯 1~5가 아래 세트 구성으로 한 번에 교체되며, 비어 있는 슬롯은 자동으로 비워집니다.");
         ImGui::Separator();
 
@@ -1168,12 +1168,12 @@ void UI::RenderConfirmSetModal() {
 
         ImGui::Spacing();
         ImGui::Separator();
-        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.4f, 1.0f), "▶ 세트 슬롯 구성 (총 %d개 슬롯 활성):", s_PendingConfirmSet.GetActiveSlotCount());
+        ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.4f, 1.0f), "세트 슬롯 구성 (총 %d개 슬롯 활성):", s_PendingConfirmSet.GetActiveSlotCount());
         ImGui::Spacing();
 
         for (int s = 0; s < Offsets::MaxSlots; ++s) {
             const auto& slotEntry = s_PendingConfirmSet.slots[s];
-            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "  • 슬롯 %d:", s + 1);
+            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "  - 슬롯 %d:", s + 1);
             ImGui::SameLine(95);
             if (slotEntry.enabled && !slotEntry.item.inputs.empty()) {
                 ImGui::TextColored(ImVec4(0.4f, 0.95f, 0.5f, 1.0f), "[채움] %s", slotEntry.item.title.c_str());
@@ -1193,7 +1193,7 @@ void UI::RenderConfirmSetModal() {
         bool isPractice = GameMemory::IsPracticeMode();
 
         ImGui::BeginDisabled(!isPractice);
-        if (ImGui::Button("✔ 맞음 (세트 보관함 저장 + 슬롯 1~5 일괄 적용)", ImVec2(280, 36))) {
+        if (ImGui::Button("맞음 (세트 보관함 저장 + 슬롯 1~5 일괄 적용)", ImVec2(270, 36))) {
             s_PendingConfirmSet.title = (std::strlen(s_ConfirmSetTitleEdit) > 0) ? s_ConfirmSetTitleEdit : "이름 없는 세트";
             s_PendingConfirmSet.charName = (std::strlen(s_ConfirmSetCharEdit) > 0) ? s_ConfirmSetCharEdit : "미지정";
             s_PendingConfirmSet.note = s_ConfirmSetNoteEdit;
@@ -1215,7 +1215,7 @@ void UI::RenderConfirmSetModal() {
         ImGui::EndDisabled();
 
         ImGui::SameLine();
-        if (ImGui::Button("💾 세트 보관함에만 저장", ImVec2(170, 36))) {
+        if (ImGui::Button("세트 보관함에만 저장", ImVec2(165, 36))) {
             s_PendingConfirmSet.title = (std::strlen(s_ConfirmSetTitleEdit) > 0) ? s_ConfirmSetTitleEdit : "이름 없는 세트";
             s_PendingConfirmSet.charName = (std::strlen(s_ConfirmSetCharEdit) > 0) ? s_ConfirmSetCharEdit : "미지정";
             s_PendingConfirmSet.note = s_ConfirmSetNoteEdit;
@@ -1233,7 +1233,7 @@ void UI::RenderConfirmSetModal() {
         }
 
         ImGui::SameLine();
-        if (ImGui::Button("✖ 취소", ImVec2(120, 36))) {
+        if (ImGui::Button("취소", ImVec2(110, 36))) {
             ResetHangulState();
             ImGui::CloseCurrentPopup();
         }
@@ -1255,9 +1255,9 @@ void UI::RenderSetModal() {
 
     if (ImGui::BeginPopupModal("녹화 세트 구성 및 저장 (슬롯 1 ~ 5 일괄 관리)##SetModal", NULL, ImGuiWindowFlags_NoMove)) {
         if (s_EditingSetIndex >= 0 && s_EditingSetIndex < (int)s_SetLibrary.size()) {
-            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "✏ 세트 정보 및 슬롯 1~5 구성 수정");
+            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "세트 정보 및 슬롯 1~5 구성 수정");
         } else {
-            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "📦 새 녹화 세트 만들기 (슬롯 1~5 조합 및 빈 슬롯 비움 설정)");
+            ImGui::TextColored(ImVec4(1.0f, 0.85f, 0.3f, 1.0f), "새 녹화 세트 만들기 (슬롯 1~5 조합 및 빈 슬롯 비움 설정)");
         }
 
         // 한/영 전환 표시줄
@@ -1320,10 +1320,10 @@ void UI::RenderSetModal() {
         // 4. 슬롯 1 ~ 5 구성 섹션
         bool isPractice = GameMemory::IsPracticeMode();
         ImGui::AlignTextToFramePadding();
-        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "▶ 슬롯 1 ~ 5 구성 (비워둔 슬롯은 세트 적용 시 자동으로 비워집니다)");
+        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "슬롯 1 ~ 5 구성 (비워둔 슬롯은 세트 적용 시 자동으로 비워집니다)");
         ImGui::SameLine(ImGui::GetWindowWidth() - 320);
         ImGui::BeginDisabled(!isPractice);
-        if (ImGui::Button("📥 현재 인게임 슬롯 1~5 그대로 가져오기", ImVec2(215, 24))) {
+        if (ImGui::Button("현재 인게임 슬롯 1~5 그대로 가져오기", ImVec2(215, 24))) {
             for (int s = 0; s < Offsets::MaxSlots; ++s) {
                 GGSTRecordingSlot slot{};
                 if (GameMemory::ReadSlot(s, slot) && slot.bHasData != 0 && slot.TotalFrameCount > 4) {
@@ -1361,13 +1361,13 @@ void UI::RenderSetModal() {
             if (!slotEntry.enabled || slotEntry.item.inputs.empty()) {
                 previewLabel = "[비워두기 - 적용 시 이 슬롯 비움]";
             } else {
-                previewLabel = "✔ [" + std::to_string(slotEntry.item.totalFrames) + "f] " + slotEntry.item.title;
+                previewLabel = "[" + std::to_string(slotEntry.item.totalFrames) + "f] " + slotEntry.item.title;
             }
 
             ImGui::SetNextItemWidth(330);
             if (ImGui::BeginCombo("##SlotSourceSelect", previewLabel.c_str())) {
                 // 1) 비워두기 선택지
-                if (ImGui::Selectable("✖ [비워두기 - 적용 시 이 슬롯 비움]", !slotEntry.enabled)) {
+                if (ImGui::Selectable("[비워두기 - 적용 시 이 슬롯 비움]", !slotEntry.enabled)) {
                     slotEntry.enabled = false;
                     s_SetSlotTitleBufs[s][0] = '\0';
                 }
@@ -1375,13 +1375,13 @@ void UI::RenderSetModal() {
                 // 2) 현재 인게임 슬롯(1~5)에서 가져오기
                 if (isPractice) {
                     ImGui::Separator();
-                    ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.6f, 1.0f), "▼ 현재 인게임 프랙티스 슬롯에서 가져오기");
+                    ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.6f, 1.0f), "[현재 인게임 프랙티스 슬롯에서 가져오기]");
                     for (int gameSlotIdx = 0; gameSlotIdx < Offsets::MaxSlots; ++gameSlotIdx) {
                         GGSTRecordingSlot liveSlot{};
                         if (GameMemory::ReadSlot(gameSlotIdx, liveSlot) && liveSlot.bHasData != 0 && liveSlot.TotalFrameCount > 4) {
                             int dur = liveSlot.TotalFrameCount - liveSlot.StartOffsetFrame;
                             if (dur <= 0) dur = liveSlot.TotalFrameCount;
-                            std::string liveLabel = "🎮 현재 인게임 슬롯 " + std::to_string(gameSlotIdx + 1) +
+                            std::string liveLabel = "현재 인게임 슬롯 " + std::to_string(gameSlotIdx + 1) +
                                                     " 데이터 (" + std::to_string(dur) + " 프레임)";
                             if (ImGui::Selectable(liveLabel.c_str())) {
                                 std::string defTitle = "슬롯 " + std::to_string(s + 1) + " 행동";
@@ -1396,13 +1396,13 @@ void UI::RenderSetModal() {
 
                 // 3) 로컬 개별 보관함(s_Library)에서 선택하기
                 ImGui::Separator();
-                ImGui::TextColored(ImVec4(0.6f, 0.85f, 1.0f, 1.0f), "▼ 로컬 개별 보관함(Recordings.json)에서 선택");
+                ImGui::TextColored(ImVec4(0.6f, 0.85f, 1.0f, 1.0f), "[로컬 개별 보관함(Recordings.json)에서 선택]");
                 if (s_Library.empty()) {
                     ImGui::TextDisabled("  (개별 보관함에 저장된 녹화가 없습니다)");
                 } else {
                     for (int libIdx = 0; libIdx < (int)s_Library.size(); ++libIdx) {
                         const auto& libItem = s_Library[libIdx];
-                        std::string itemLabel = "📂 [" + libItem.charName + "] " + libItem.title +
+                        std::string itemLabel = "[" + libItem.charName + "] " + libItem.title +
                                                 " (" + std::to_string(libItem.totalFrames) + "f)##Lib" + std::to_string(libIdx);
                         if (ImGui::Selectable(itemLabel.c_str())) {
                             slotEntry.enabled = true;
@@ -1478,7 +1478,7 @@ void UI::RenderSetModal() {
 
         ImGui::BeginDisabled(activeCount == 0);
         if (s_EditingSetIndex >= 0 && s_EditingSetIndex < (int)s_SetLibrary.size()) {
-            if (ImGui::Button("💾 세트 수정 저장 + 세트 공유 코드 복사", ImVec2(260, 36))) {
+            if (ImGui::Button("세트 수정 저장 + 세트 공유 코드 복사", ImVec2(250, 36))) {
                 RecordingSet updated = finalizeSetDraft();
                 s_SetLibrary[s_EditingSetIndex] = updated;
                 std::string shareStr = RecordingManager::ExportSetToShareString(updated);
@@ -1492,7 +1492,7 @@ void UI::RenderSetModal() {
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
-            if (ImGui::Button("💾 세트 수정만 저장", ImVec2(160, 36))) {
+            if (ImGui::Button("세트 수정만 저장", ImVec2(150, 36))) {
                 RecordingSet updated = finalizeSetDraft();
                 s_SetLibrary[s_EditingSetIndex] = updated;
                 SortSetLibrary(1, true);
@@ -1504,7 +1504,7 @@ void UI::RenderSetModal() {
                 ImGui::CloseCurrentPopup();
             }
         } else {
-            if (ImGui::Button("📋 세트 보관함 저장 + 세트 코드 복사", ImVec2(250, 36))) {
+            if (ImGui::Button("세트 보관함 저장 + 세트 코드 복사", ImVec2(240, 36))) {
                 RecordingSet created = finalizeSetDraft();
                 s_SetLibrary.push_back(created);
                 SortSetLibrary(1, true);
@@ -1522,7 +1522,7 @@ void UI::RenderSetModal() {
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();
-            if (ImGui::Button("💾 세트 보관함만 저장", ImVec2(165, 36))) {
+            if (ImGui::Button("세트 보관함만 저장", ImVec2(155, 36))) {
                 RecordingSet created = finalizeSetDraft();
                 s_SetLibrary.push_back(created);
                 SortSetLibrary(1, true);
@@ -1540,7 +1540,7 @@ void UI::RenderSetModal() {
         ImGui::EndDisabled();
 
         ImGui::SameLine();
-        if (ImGui::Button("✖ 취소", ImVec2(110, 36))) {
+        if (ImGui::Button("취소", ImVec2(100, 36))) {
             ResetHangulState();
             s_EditingSetIndex = -1;
             ImGui::CloseCurrentPopup();
@@ -1560,7 +1560,7 @@ void UI::RenderLibrary() {
 
     // 검색창 및 빠른 정렬 버튼 바
     ImGui::AlignTextToFramePadding();
-    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "🔍 개별 녹화 검색:");
+    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "개별 녹화 검색:");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(240);
     InputTextWithHintKorean("##LibSearch", "캐릭터 / 제목 / 메모 검색...", s_SearchFilterBuf, sizeof(s_SearchFilterBuf));
@@ -1585,7 +1585,7 @@ void UI::RenderLibrary() {
 
     if (s_Library.empty()) {
         ImGui::Spacing();
-        ImGui::TextDisabled("저장된 개별 녹화가 없습니다. 위 슬롯에서 [📤 저장 / 공유 코드 만들기]를 누르거나 클립보드에서 붙여넣어 보세요.");
+        ImGui::TextDisabled("저장된 개별 녹화가 없습니다. 위 슬롯에서 [저장 / 공유 코드 만들기]를 누르거나 클립보드에서 붙여넣어 보세요.");
         return;
     }
 
@@ -1734,7 +1734,7 @@ void UI::RenderSetLibrary() {
 
     // 상단 검색창 + 정렬 + [새 세트 만들기] 버튼 바
     ImGui::AlignTextToFramePadding();
-    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "🔍 세트 검색:");
+    ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "세트 검색:");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(220);
     InputTextWithHintKorean("##SetSearch", "캐릭터 / 세트 제목 / 메모 검색...", s_SetSearchFilterBuf, sizeof(s_SetSearchFilterBuf));
@@ -1760,7 +1760,7 @@ void UI::RenderSetLibrary() {
     ImGui::SameLine();
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.20f, 0.55f, 0.35f, 0.95f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.68f, 0.44f, 1.00f));
-    if (ImGui::Button("➕ 보관함 조합으로 새 세트 만들기", ImVec2(220, 24))) {
+    if (ImGui::Button("보관함 조합으로 새 세트 만들기", ImVec2(210, 24))) {
         s_EditingSetIndex = -1;
         s_EditingSetDraft = RecordingSet{};
         s_SetTitleBuf[0] = '\0';
@@ -1776,14 +1776,14 @@ void UI::RenderSetLibrary() {
     ImGui::SameLine();
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.55f, 0.28f, 0.68f, 0.90f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.68f, 0.36f, 0.82f, 1.00f));
-    if (ImGui::Button("📦 현재 슬롯 1~5 묶어서 세트 만들기##SetTabBtn", ImVec2(235, 24))) {
+    if (ImGui::Button("현재 슬롯 1~5 묶어서 세트 만들기##SetTabBtn", ImVec2(225, 24))) {
         OpenSetModalFromCurrentGameSlots();
     }
     ImGui::PopStyleColor(2);
 
     if (s_SetLibrary.empty()) {
         ImGui::Spacing();
-        ImGui::TextDisabled("저장된 녹화 세트가 없습니다. [➕ 보관함 조합으로 새 세트 만들기] 또는 [📦 현재 슬롯 1~5 묶어서 세트 만들기]를 눌러 세트를 만들어 보세요!");
+        ImGui::TextDisabled("저장된 녹화 세트가 없습니다. [보관함 조합으로 새 세트 만들기] 또는 [현재 슬롯 1~5 묶어서 세트 만들기]를 눌러 세트를 만들어 보세요!");
         return;
     }
 
@@ -1865,7 +1865,7 @@ void UI::RenderSetLibrary() {
             ImGui::BeginDisabled(!isPractice);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.80f, 0.32f, 0.15f, 0.95f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.95f, 0.42f, 0.20f, 1.00f));
-            if (ImGui::Button("⚡ 슬롯 일괄적용", ImVec2(115, 24))) {
+            if (ImGui::Button("슬롯 일괄적용", ImVec2(110, 24))) {
                 if (ApplySetToGameSlots(setItem)) {
                     ShowToast("세트 [" + setItem.title + "] -> 슬롯 1~5 일괄 적용 완료! (빈 슬롯은 비워짐)");
                 } else {
@@ -1933,14 +1933,14 @@ void UI::RenderBottomSection() {
         ImGuiTabItemFlags tab1Flags = (s_RequestedTab == 1) ? ImGuiTabItemFlags_SetSelected : ImGuiTabItemFlags_None;
         s_RequestedTab = -1;
 
-        std::string tab0Title = "📂 로컬 개별 녹화 보관함 (" + std::to_string(s_Library.size()) + ")###TabIndividual";
+        std::string tab0Title = "로컬 개별 녹화 보관함 (" + std::to_string(s_Library.size()) + ")###TabIndividual";
         if (ImGui::BeginTabItem(tab0Title.c_str(), NULL, tab0Flags)) {
             s_ActiveTab = 0;
             RenderLibrary();
             ImGui::EndTabItem();
         }
 
-        std::string tab1Title = "📦 로컬 세트 보관함 - 슬롯 1~5 일괄 교체 (" + std::to_string(s_SetLibrary.size()) + ")###TabSets";
+        std::string tab1Title = "로컬 세트 보관함 - 슬롯 1~5 일괄 교체 (" + std::to_string(s_SetLibrary.size()) + ")###TabSets";
         if (ImGui::BeginTabItem(tab1Title.c_str(), NULL, tab1Flags)) {
             s_ActiveTab = 1;
             RenderSetLibrary();
