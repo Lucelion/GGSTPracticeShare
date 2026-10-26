@@ -1,0 +1,19 @@
+# Build directories & artifacts
+build/
+out/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Packaged release archives (uploaded to GitHub Releases)
+dist/All_In_One_Package/
+dist/Mod_Only_Package/
+*.zip
+
+# IDE & OS files
+.vs/
+.vscode/
+Thumbs.db
+.DS_Store
